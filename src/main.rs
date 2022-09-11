@@ -73,6 +73,35 @@ fn test() {
     // println!("{:?}", zbuffer)
 }
 
+fn print_frame() {
+    let cols;
+    let rows;
+    match termsize::get() {
+        Some(size) => {
+            cols = size.cols as usize;
+            rows = size.rows as usize;
+        }
+        None => {
+            cols = 80;
+            rows = 24;
+        }
+    }
+
+    let mut output_buffer = vec![vec![' '; cols]; rows];
+    for idy in 0..output_buffer.len() {
+        for idx in 0..output_buffer[0].len() {
+            output_buffer[idy][idx] = (65 + idy) as u8 as char;
+        }
+    }
+
+    for row in output_buffer {
+        for col in row {
+            print!("{}", col);
+        }
+    }
+}
+
 fn main() {
-    test();
+    // test();
+    print_frame();
 }
