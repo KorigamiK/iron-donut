@@ -4,10 +4,13 @@ use std::f64::consts::PI;
 
 use na::{Point2, Point3, Rotation3, Vector3};
 use termsize;
+mod renderer;
+use renderer::Renderer;
 
 fn test() {
     let cols;
     // let rows;
+    // let renderer = Renderer::new();
     match termsize::get() {
         Some(size) => {
             cols = size.cols as usize;
@@ -28,7 +31,6 @@ fn test() {
 
     let circle_radius = 1.0; // R1
     let circle_center = Point3::new(2.0, 0.0, 0.0); // R2
-
     let k2 = 5.0;
     let k1 = cols as f64 * k2 * 3.0 / (8.0 * (circle_radius + circle_center.x));
 
@@ -86,19 +88,16 @@ fn print_frame() {
             rows = 24;
         }
     }
+    let mut output: Vec<Vec<char>> = vec![vec![' '; cols]; rows];
+    let renderer = Renderer::new(&mut output);
 
-    let mut output_buffer = vec![vec![' '; cols]; rows];
-    for idy in 0..output_buffer.len() {
-        for idx in 0..output_buffer[0].len() {
-            output_buffer[idy][idx] = (65 + idy) as u8 as char;
+    for idy in 0..renderer.output_buffer.len() {
+        for idx in 0..renderer.output_buffer[0].len() {
+            renderer.output_buffer[idy][idx] = (65 + idy) as u8 as char;
         }
     }
 
-    for row in output_buffer {
-        for col in row {
-            print!("{}", col);
-        }
-    }
+    renderer.render();
 }
 
 fn main() {
