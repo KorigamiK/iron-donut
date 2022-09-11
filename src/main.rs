@@ -4,7 +4,12 @@ use std::f64::consts::PI;
 
 use na::{Point2, Point3, Rotation3, Vector3};
 use termsize;
+
+mod donut;
+mod range_iterator;
 mod renderer;
+mod torus;
+
 use renderer::Renderer;
 
 fn test() {
@@ -89,15 +94,18 @@ fn print_frame() {
         }
     }
     let mut output: Vec<Vec<char>> = vec![vec![' '; cols]; rows];
-    let renderer = Renderer::new(&mut output);
+    let mut z_buffer: Vec<Vec<f64>> = vec![vec![0.0; cols]; rows];
+    let mut renderer = Renderer::new(&mut output, &mut z_buffer);
 
-    for idy in 0..renderer.output_buffer.len() {
-        for idx in 0..renderer.output_buffer[0].len() {
-            renderer.output_buffer[idy][idx] = (65 + idy) as u8 as char;
-        }
-    }
+    // renderer.render();
+    // for idy in 0..renderer.output_buffer.len() {
+    //     for idx in 0..renderer.output_buffer[0].len() {
+    //         renderer.output_buffer[idy][idx] = (65 + idy) as u8 as char;
+    //     }
+    // }
+    // renderer.render();
 
-    renderer.render();
+    renderer.animate();
 }
 
 fn main() {
